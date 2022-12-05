@@ -1,0 +1,31 @@
+.UploadShow {
+    display: flex;
+    position: absolute;
+    margin: auto;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(255, 255, 255, 0.773);
+}
+
+.form{
+    background-color: white;
+    margin: auto;
+    width: 30vw;
+    height: 30vh;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.form>form{
+   margin: auto;
+}
+
+.form>button{
+ float: left;
+ margin-top: 0;
+ margin-left: auto;
+}

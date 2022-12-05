@@ -1,24 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import "./css/App.css";
+import Login from "./Login";
+import Home from "./Home";
+import { useEffect, useContext } from "react";
+import AuthContext from "./AuthContext";
 
 function App() {
+  const ctx = useContext(AuthContext);
+useEffect(()=>{
+  const storedIsLoggedIn = localStorage.getItem('isLoggedIn');
+  if(storedIsLoggedIn){
+    ctx.loginHandler(storedIsLoggedIn)
+  }
+},[]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div className="App">
+        {ctx.isLoggedIn ? <Home /> : <Login />}
+        {/*youre in the html body*/}
+      </div>
   );
 }
 

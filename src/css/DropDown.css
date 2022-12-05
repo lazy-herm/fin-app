@@ -1,0 +1,7 @@
+.label, .option, .select{
+    text-transform: capitalize;
+}
+.dropdownContainer{
+    display: flex;
+    flex-direction: row;
+}

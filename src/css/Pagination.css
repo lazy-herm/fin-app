@@ -1,0 +1,35 @@
+
+.pagination{
+    display: flex;
+    flex-direction: row;
+   padding: 0;
+}
+
+.pagination>li{
+    display: block;
+    padding: 0.5em .5em 0.5em .5em;
+}
+
+.pagination>li>button{
+    background-color: greenyellow;
+    color: black;
+    display: flex;
+}
+.pagination>li>button:active{
+    background-color: black;
+}
+.newPagination{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.newPagination>input{
+    width: 1em;
+    text-align: center;
+}
+
+.newPagination>input[disabled]{
+    background-color: grey;
+    color: black;
+}

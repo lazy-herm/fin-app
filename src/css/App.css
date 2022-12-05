@@ -1,0 +1,10 @@
+.App {
+  display: flex;
+  margin: 0;
+  height: 100vh;
+  flex-direction: column;
+}
+
+* {
+  border: 1px solid #03ac13;
+}
