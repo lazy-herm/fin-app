@@ -12,7 +12,7 @@ const YearFields = (props) => {
               </td>
             );
           } else {
-            return <Fragment></Fragment>;
+            return <Fragment  key={'year'+index} ></Fragment>;
           }
         })}
     </Fragment>

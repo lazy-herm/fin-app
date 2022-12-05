@@ -6,7 +6,7 @@ import DayFields from "./DayFields";
 import DropDown from "./DropDown";
 import BarContainers from "./BarContainers";
 import DateSelector from "./DateSelector";
-import sequentialDates from '../utils/transactions';
+import { sequentialDates, cummulativeDays, sequentialMonths, cummulativeMonths } from "../utils/transactions";
 
 const Graph = (props) => {
   const [detail, detDetail] = useState("daily");
@@ -17,7 +17,6 @@ const Graph = (props) => {
       return new Date(a[1].date) - new Date(b[1].date);
     })
   );
-  const [dateSpan, setDateSpan] = useState(null);
   const detailOptions = ["daily", "weekly", "monthly", "yearly"];
 
   const dateChangeHandler = (event) => {
@@ -35,28 +34,8 @@ const Graph = (props) => {
           return [prevState[0], inputDate.toDateString()];
         });
       }
-    } else {
-      if (name === "startDate") {
-        setDates((prevState) => {
-          return [earliestDate.toDateString(), prevState[1]];
-        });
-      } else {
-        setDates((prevState) => {
-          return [prevState[0], latestDate.toDateString()];
-        });
-      }
-    }
+    } 
   };
-
-  useEffect(() => {
-    if (dates) {
-      setDateSpan(
-        (new Date(new Date(dates[1]).toDateString()) -
-          new Date(new Date(dates[0]).toDateString())) /
-          86400000
-      );
-    }
-  }, [dates]);
 
   useEffect(() => {
     setDates([
@@ -67,35 +46,22 @@ const Graph = (props) => {
 
   useEffect(() => {
     let dObj = {};
-    let monthTracker = 0;
-    let yearTracker = 0;
-    let yearCount = 0;
     //create array of all dates from earliest to latest date
-    //get date span
-    
-    if (dates){dObj = sequentialDates(dates[0], dates[1]);console.log(dObj);}
-    //get cummulative expense and income for each date
-    if (Object.keys(dObj).length > 0) {
-      sortedTrxs.forEach((trx) => {
-        let date = new Date(trx[1].date).toDateString();
-
-        if (
-          new Date(date) >= new Date(dates[0]) &&
-          new Date(date) <= new Date(dates[1])
-        ) {
-          if (trx[1].amount < 0) {
-            dObj[date]["expense"] =
-              parseFloat(dObj[date]["expense"]) +
-              Math.abs(parseFloat(trx[1].amount));
-          } else {
-            dObj[date]["income"] =
-              parseFloat(dObj[date]["income"]) + parseFloat(trx[1].amount);
-          }
-        }
-      });
-      setPeriods(dObj);
+    if (dates) {
+      // dObj = sequentialDates(dates[0], dates[1]);
+      dObj = sequentialMonths(dates[0], dates[1]);
+      // console.log(test);
+      // const testTrx = cummulativeMonths(test, sortedTrxs, dates[0], dates[1]);
+      // console.log(testTrx);
     }
-  }, [dateSpan]);
+
+    //set cummulative expense and income for each date
+    if (Object.keys(dObj).length > 0) {
+      // setPeriods(cummulativeDays(dObj, sortedTrxs, dates[0], dates[1]));
+      setPeriods(cummulativeMonths(dObj, sortedTrxs, dates[0], dates[1]));
+
+    }
+  }, [dates, sortedTrxs]);
 
   return (
     <div>

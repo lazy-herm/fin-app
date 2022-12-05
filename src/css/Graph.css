@@ -1,37 +1,38 @@
-.graphContainer{
-    display: flex;
-    flex-direction: row;
+.graphContainer {
+  display: flex;
+  flex-direction: row;
 }
 
-
-
-.barContainer{
-    border: none;
-    padding: 0;
-    vertical-align: bottom;
+.graphContainer > table {
+  table-layout: fixed;
+  width: 100vw;
+}
+.barContainer {
+  border: none;
+  padding: 0;
+  vertical-align: bottom;
 }
 
-.bar{
-    width: .5em;
-    display: flex;
-    border: none;
+.bar {
+  width: 50%;
+  display: inline-block;
+  border: none;
 }
-.expenseBar{
-    background-color: red;
-    
+.expenseBar {
+  background-color: red;
 }
-.incomeBar{
-    background-color: green;
-}
-
-.periodContainer{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    width: 1.5em;
-    border: none;
+.incomeBar {
+  background-color: green;
 }
 
-.periodLabel{
-    margin-bottom: 0;
+.periodContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 1.5em;
+  border: none;
+}
+
+.periodLabel {
+  margin-bottom: 0;
 }
