@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "../css/Graph.css";
 import YearFields from "./YearFields";
 import MonthFields from "./MonthFields";
@@ -6,11 +6,28 @@ import DayFields from "./DayFields";
 import DropDown from "./DropDown";
 import BarContainers from "./BarContainers";
 import DateSelector from "./DateSelector";
-import { sequentialDates, cummulativeDays, sequentialMonths, cummulativeMonths } from "../utils/transactions";
+import {
+  sequentialDates,
+  cummulativeDays,
+  sequentialMonths,
+  cummulativeMonths,
+} from "../utils/transactions";
+import {
+  BarChart,
+  Bar,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 const Graph = (props) => {
-  const [detail, detDetail] = useState("daily");
+  const [detail, setDetail] = useState("daily");
   const [periods, setPeriods] = useState(null);
+  const [rechartData, setRechartData] = useState(null);
   const [dates, setDates] = useState(null);
   const [sortedTrxs, setSortedTrxs] = useState(
     Object.entries(props.trxs).sort((a, b) => {
@@ -18,6 +35,10 @@ const Graph = (props) => {
     })
   );
   const detailOptions = ["daily", "weekly", "monthly", "yearly"];
+
+  const detailHandler = (event) => {
+    setDetail(event.target.value);
+  };
 
   const dateChangeHandler = (event) => {
     const inputDate = new Date(event.target.valueAsDate);
@@ -34,7 +55,7 @@ const Graph = (props) => {
           return [prevState[0], inputDate.toDateString()];
         });
       }
-    } 
+    }
   };
 
   useEffect(() => {
@@ -46,47 +67,62 @@ const Graph = (props) => {
 
   useEffect(() => {
     let dObj = {};
-    //create array of all dates from earliest to latest date
+
+    //create array of all dates from earliest to latest date and get cummulative expense and income
     if (dates) {
-      // dObj = sequentialDates(dates[0], dates[1]);
-      dObj = sequentialMonths(dates[0], dates[1]);
-      // console.log(test);
-      // const testTrx = cummulativeMonths(test, sortedTrxs, dates[0], dates[1]);
-      // console.log(testTrx);
+      if (detail === "daily") {
+        dObj = sequentialDates(dates[0], dates[1]);
+        setPeriods(cummulativeDays(dObj, sortedTrxs, dates[0], dates[1]));
+      } else if (detail === "monthly") {
+        dObj = sequentialMonths(dates[0], dates[1]);
+        setPeriods(cummulativeMonths(dObj, sortedTrxs, dates[0], dates[1]));
+      }
+      const test = Object.entries(dObj).map((entry) => {
+        return {
+          date: entry[0],
+          expense: entry[1]["expense"],
+          income: entry[1]["income"],
+        };
+      });
+      console.log(test);
+      setRechartData(
+        Object.entries(dObj).map((entry) => {
+          return {
+            date: entry[0],
+            expense: entry[1]["expense"],
+            income: entry[1]["income"],
+          };
+        })
+      );
+      console.log(rechartData);
     }
-
-    //set cummulative expense and income for each date
-    if (Object.keys(dObj).length > 0) {
-      // setPeriods(cummulativeDays(dObj, sortedTrxs, dates[0], dates[1]));
-      setPeriods(cummulativeMonths(dObj, sortedTrxs, dates[0], dates[1]));
-
-    }
-  }, [dates, sortedTrxs]);
+  }, [dates, sortedTrxs, detail]);
 
   return (
     <div>
-      <DropDown name="detail" options={detailOptions}></DropDown>
+      <DropDown
+        name="detail"
+        options={detailOptions}
+        detailHandler={detailHandler}
+      ></DropDown>
       <DateSelector
         dates={dates}
         dateChangeHandler={dateChangeHandler}
       ></DateSelector>
       <div className="graphContainer">
-        <table>
-          <tbody>
-            <tr>
-              <BarContainers periods={periods}></BarContainers>
-            </tr>
-            <tr>
-              <DayFields periods={periods}></DayFields>
-            </tr>
-            <tr>
-              <MonthFields periods={periods}></MonthFields>
-            </tr>
-            <tr>
-              <YearFields periods={periods}></YearFields>
-            </tr>
-          </tbody>
-        </table>
+        {rechartData && (
+          <ResponsiveContainer height="100%" width="100%">
+            <BarChart data={rechartData} height={400} width={400}>
+              <CartesianGrid />
+              <XAxis dataKey="date" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="income" fill="#8884d8" />
+              <Bar dataKey="expense" fill="#82ca9d" />
+            </BarChart>
+          </ResponsiveContainer>
+        )}
       </div>
     </div>
   );

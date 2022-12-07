@@ -1,11 +1,10 @@
-import { Fragment } from "react";
 import "../css/DropDown.css";
 
 const DropDown = (props) => {
   return (
     <div className="dropdownContainer">
       <div className="label">{props.name}:</div>
-      <select className="select">
+      <select className="select" onChange={props.detailHandler}>
         {props.options &&
           props.options.map((option) => {
             return (

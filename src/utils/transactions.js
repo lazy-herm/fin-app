@@ -133,13 +133,13 @@ export const cummulativeMonths = (dateObj, trxs, minDate, maxDate) => {
       new Date(trxMonth) <= new Date(maxMonth)
     ) {
       if (trx[1].amount < 0) {
-        console.log(trxMonth.toDateString());
         dateObj[trxMonth.toDateString()]["expense"] =
           parseFloat(dateObj[trxMonth.toDateString()]["expense"]) +
           Math.abs(parseFloat(trx[1].amount));
       } else {
         dateObj[trxMonth.toDateString()]["income"] =
-          parseFloat(dateObj[trxMonth.toDateString()]["income"]) + parseFloat(trx[1].amount);
+          parseFloat(dateObj[trxMonth.toDateString()]["income"]) +
+          parseFloat(trx[1].amount);
       }
     }
   });
